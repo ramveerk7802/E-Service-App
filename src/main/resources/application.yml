@@ -1,11 +1,26 @@
-spring.application.name=E-Service-App
-spring.datasource.url=${DATABASE_URL}
-spring.datasource.username=${DATABASE_USERNAME}
-spring.datasource.password=${DATABASE_PASSWORD}
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.application.name=E-Service-App
+#spring.datasource.url=${DATABASE_URL}
+#spring.datasource.username=${DATABASE_USERNAME}
+#spring.datasource.password=${DATABASE_PASSWORD}
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#
+#spring.jpa.show-sql=true
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 
-spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 
+spring:
+  application:
+    name: E-Service-App
 
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  database-platform: org.hibernate.dialect.MySQLDialect

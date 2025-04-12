@@ -1,0 +1,82 @@
+warning: in the working copy of 'pom.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/main/resources/application.yml', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/pom.xml b/pom.xml[m
+[1mindex cd71fe0..4af5f4e 100644[m
+[1m--- a/pom.xml[m
+[1m+++ b/pom.xml[m
+[36m@@ -30,6 +30,10 @@[m
+ 		<java.version>21</java.version>[m
+ 	</properties>[m
+ 	<dependencies>[m
+[32m+[m		[32m<dependency>[m
+[32m+[m			[32m<groupId>org.springframework.boot</groupId>[m
+[32m+[m			[32m<artifactId>spring-boot-starter-mail</artifactId>[m
+[32m+[m		[32m</dependency>[m
+ 		<dependency>[m
+ 			<groupId>org.springframework.boot</groupId>[m
+ 			<artifactId>spring-boot-starter-data-jpa</artifactId>[m
+[1mdiff --git a/src/main/java/com/rvcode/E_Service/App/config/SecurityConfig.java b/src/main/java/com/rvcode/E_Service/App/config/SecurityConfig.java[m
+[1mindex 9bf9e9c..0482429 100644[m
+[1m--- a/src/main/java/com/rvcode/E_Service/App/config/SecurityConfig.java[m
+[1m+++ b/src/main/java/com/rvcode/E_Service/App/config/SecurityConfig.java[m
+[36m@@ -51,7 +51,7 @@[m [mpublic class SecurityConfig {[m
+     }[m
+ [m
+ [m
+[31m-    [m
+[32m+[m
+     @Bean[m
+     public AuthenticationProvider authenticationProvider(){[m
+         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();[m
+[1mdiff --git a/src/main/java/com/rvcode/E_Service/App/services/EmailService.java b/src/main/java/com/rvcode/E_Service/App/services/EmailService.java[m
+[1mindex 782e6bf..4f27fa9 100644[m
+[1m--- a/src/main/java/com/rvcode/E_Service/App/services/EmailService.java[m
+[1m+++ b/src/main/java/com/rvcode/E_Service/App/services/EmailService.java[m
+[36m@@ -1,4 +1,8 @@[m
+ package com.rvcode.E_Service.App.services;[m
+ [m
+[32m+[m
+[32m+[m[32mimport org.springframework.stereotype.Service;[m
+[32m+[m
+[32m+[m[32m@Service[m
+ public class EmailService {[m
+ }[m
+[1mdiff --git a/src/main/resources/application.yml b/src/main/resources/application.yml[m
+[1mindex 4a5e5de..7fc1394 100644[m
+[1m--- a/src/main/resources/application.yml[m
+[1m+++ b/src/main/resources/application.yml[m
+[36m@@ -1,11 +1,26 @@[m
+[31m-spring.application.name=E-Service-App[m
+[31m-spring.datasource.url=${DATABASE_URL}[m
+[31m-spring.datasource.username=${DATABASE_USERNAME}[m
+[31m-spring.datasource.password=${DATABASE_PASSWORD}[m
+[31m-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver[m
+[32m+[m[32m#spring.application.name=E-Service-App[m
+[32m+[m[32m#spring.datasource.url=${DATABASE_URL}[m
+[32m+[m[32m#spring.datasource.username=${DATABASE_USERNAME}[m
+[32m+[m[32m#spring.datasource.password=${DATABASE_PASSWORD}[m
+[32m+[m[32m#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver[m
+[32m+[m[32m#[m
+[32m+[m[32m#spring.jpa.show-sql=true[m
+[32m+[m[32m#spring.jpa.hibernate.ddl-auto=update[m
+[32m+[m[32m#spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect[m
+ [m
+[31m-spring.jpa.show-sql=true[m
+[31m-spring.jpa.hibernate.ddl-auto=update[m
+[31m-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect[m
+ [m
+[32m+[m[32mspring:[m
+[32m+[m[32m  application:[m
+[32m+[m[32m    name: E-Service-App[m
+ [m
+[32m+[m[32m  datasource:[m
+[32m+[m[32m    url: ${DATABASE_URL}[m
+[32m+[m[32m    username: ${DATABASE_USERNAME}[m
+[32m+[m[32m    password: ${DATABASE_PASSWORD}[m
+[32m+[m[32m    driver-class-name: com.mysql.cj.jdbc.Driver[m
+[32m+[m
+[32m+[m[32m  jpa:[m
+[32m+[m[32m    show-sql: true[m
+[32m+[m[32m    hibernate:[m
+[32m+[m[32m      ddl-auto: update[m
+[32m+[m[32m  database-platform: org.hibernate.dialect.MySQLDialect[m
