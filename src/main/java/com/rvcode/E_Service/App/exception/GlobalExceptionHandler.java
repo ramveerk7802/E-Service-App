@@ -18,5 +18,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse customExceptionHandler(MyCustomException e){
         return new ErrorResponse(LocalDateTime.now(),e.getMessage(),"");
     }
+
+    @ExceptionHandler(UserAlreadyRegister.class)
+    public ErrorResponse userExistExceptionHandler(UserAlreadyRegister e){
+        return new ErrorResponse(LocalDateTime.now(), e.getMessage(), "Registration failed");
+    }
 }
 

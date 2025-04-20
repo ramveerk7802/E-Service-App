@@ -1,5 +1,6 @@
 package com.rvcode.E_Service.App.services;
 
+import com.rvcode.E_Service.App.dtoObjects.UserResponseDto;
 import com.rvcode.E_Service.App.entities.User;
 import com.rvcode.E_Service.App.enums.Role;
 import com.rvcode.E_Service.App.exception.MyCustomException;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -18,6 +20,16 @@ public class AdminService {
     public List<User> findAllRegisteredUser(Role role){
         try {
             List<User> list = userRepository.findAllByRole(role);
+            return list;
+
+        }catch (Exception e){
+            throw new MyCustomException("Error fetching the Registered user :-> "+ e.getMessage());
+        }
+    }
+
+    public List<User> findAllUser(){
+        try {
+            List<User> list = userRepository.findAll();
             return list;
 
         }catch (Exception e){

@@ -1,19 +1,30 @@
 package com.rvcode.E_Service.App.services;
 
+import com.rvcode.E_Service.App.CustomUserDetail;
 import com.rvcode.E_Service.App.dtoObjects.UserOrElectricianRegistrationDto;
 import com.rvcode.E_Service.App.entities.Electrician;
 import com.rvcode.E_Service.App.entities.User;
 import com.rvcode.E_Service.App.enums.Role;
 import com.rvcode.E_Service.App.exception.MyCustomException;
+import com.rvcode.E_Service.App.exception.UserAlreadyRegister;
 import com.rvcode.E_Service.App.repositories.ElectricianRepository;
 import com.rvcode.E_Service.App.repositories.UserRepository;
+import com.rvcode.E_Service.App.response.JwtTokenResponse;
+import com.rvcode.E_Service.App.utility.Validator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class AuthService {
 
 
@@ -26,11 +37,24 @@ public class AuthService {
     @Autowired
     private ElectricianRepository electricianRepository;
 
-    public User registerForUserOrElectrician(UserOrElectricianRegistrationDto userDto, Role role){
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private CustomUserDetailServiceImp customUserDetailServiceImp;
+    @Autowired
+    private Validator validator;
+
+    public JwtTokenResponse registerForUserOrElectrician(UserOrElectricianRegistrationDto userDto, Role role){
         try {
             if(userRepository.existsByEmail(userDto.getEmail())){
-                throw new MyCustomException("User email already registered.");
+                throw new UserAlreadyRegister("User email already register");
             }
+            if(!validator.emailValidator(userDto.getEmail()) || !validator.phoneNumberValidator(userDto.getPhone()) || !validator.pinCodeValidator(userDto.getPinCode()))
+                throw new MyCustomException("Enter the valid data");
             User user = new User();
             user.setName(userDto.getName());
             user.setEmail(userDto.getEmail());
@@ -49,24 +73,48 @@ public class AuthService {
                 user.setElectrician(electrician);
             }
             User saveduser = userRepository.save(user);
-            return saveduser;
+            UserDetails userDeatails = customUserDetailServiceImp.loadUserByUsername(saveduser.getEmail());
+            return getJwtToken(userDeatails);
+
         }catch (Exception e){
-            throw new MyCustomException("Error on registration of user");
+            throw e;
         }
     }
 
-    public User authenticateUser(String email,String password){
+    public JwtTokenResponse authenticateUser(String email,String password){
         try {
-            Optional<User> optionalUser = userRepository.findByEmail(email);
-            if(optionalUser.isEmpty())
-                return null;
-            User user = optionalUser.get();
-            if(passwordEncoder.matches(password, user.getPassword()))
-                return user;
-            return  null;
+
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+            if(authentication.isAuthenticated()){
+                UserDetails userDetails = customUserDetailServiceImp.loadUserByUsername(email);
+                return getJwtToken(userDetails);
+            }
+        }catch (AuthenticationException e){
+            log.error("Failed to Authentication : "+e.getMessage());
+        }
+        return null;
+    }
+
+    public String refreshToken(String token){
+        try {
+            String email = jwtService.extractUserName(token);
+            UserDetails userDetails = customUserDetailServiceImp.loadUserByUsername(email);
+            String newAccessToken = jwtService.generateAccessToken(userDetails);
+            return newAccessToken;
         }catch (Exception e){
             return null;
         }
+    }
+
+
+
+
+
+    private JwtTokenResponse getJwtToken(UserDetails userDetails){
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+        return new JwtTokenResponse(accessToken,refreshToken);
     }
 }
 

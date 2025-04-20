@@ -44,6 +44,7 @@ public class User {
     @Column(nullable = false, length = 6)
     private String pinCode;
 
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<BookingRequest> bookingRequestsList = new ArrayList<>();
 

@@ -171,7 +171,7 @@ public class ElectricianService {
             return updatedServiceType;
 
         }catch (Exception e){
-            throw new MyCustomException("Failed to Update the Service Type"+e.getMessage());
+            throw e;
         }
     }
 
@@ -189,7 +189,7 @@ public class ElectricianService {
             return list;
         }catch (Exception e){
             log.error("Error getting All Booking Request -> "+ e.getMessage());
-            return null;
+            throw e;
         }
 
     }
@@ -210,7 +210,7 @@ public class ElectricianService {
             return saved;
         }catch (Exception e){
             log.error("Error on Booking status update");
-            return null;
+            throw e;
         }
     }
 }

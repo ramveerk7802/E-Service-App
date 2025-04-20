@@ -1,8 +1,11 @@
 package com.rvcode.E_Service.App.dtoObjects;
 
+import com.rvcode.E_Service.App.entities.BookingRequest;
 import com.rvcode.E_Service.App.entities.Electrician;
 import com.rvcode.E_Service.App.enums.Role;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class UserResponseDto {
@@ -15,4 +18,5 @@ public class UserResponseDto {
     private String state;
     private String pinCode;
     private Electrician electrician;
+    private List<BookingRequest> bookingRequestList;
 }
